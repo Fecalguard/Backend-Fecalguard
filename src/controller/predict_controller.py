@@ -13,7 +13,7 @@ model = tf.keras.models.load_model("./model/model.h5")
 # Daftar label
 CLASS_NAMES = ['Coccidiosis', 'Healthy', 'New Castle Disease', 'Salmonella']
 
-async def predict(file: UploadFile):
+async def predict(file: UploadFile, current_user: dict):
     try:
         image_bytes = await file.read()
         processed_image = preprocess_image(image_bytes)
@@ -34,6 +34,7 @@ async def predict(file: UploadFile):
             "confidence": confidence,
             "image_url": blob.public_url,
             "datetime": datetime.now().isoformat(),
+            "current_user": current_user.get("username"),
         }
 
         # Save prediction to Firestore
@@ -46,12 +47,11 @@ async def predict(file: UploadFile):
         print(f"Error during prediction: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     
-async def get_prediction_history():
-    history_ref = db.collection('predictions')
-    docs = history_ref.stream()
-    
+async def get_prediction_history(current_user: dict):
+    user_predictions_ref = db.collection('predictions').where('current_user', '==', current_user.get("username"))
+    user_predictions = user_predictions_ref.stream()
     history = []
-    for doc in docs:
+    for doc in user_predictions:
         history.append(doc.to_dict())
 
     return history

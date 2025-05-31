@@ -16,10 +16,10 @@ async def predict(
     file: UploadFile = File(...),
     current_user: dict = Depends(auth_controller.get_current_user)
 ):
-    return await predict_controller.predict(file)
+    return await predict_controller.predict(file, current_user)
 
 @router.get("/history")
 async def get_prediction_history(
     current_user: dict = Depends(auth_controller.get_current_user)
 ):
-    return await predict_controller.get_prediction_history()
+    return await predict_controller.get_prediction_history(current_user)
