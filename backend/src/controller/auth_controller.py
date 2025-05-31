@@ -5,10 +5,8 @@ from fastapi import HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
 from datetime import datetime, timedelta
 from src.service.database import db
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
 JWT_SECRET = os.getenv("JWT_SECRET")
 ALGORITHM = "HS256"
 

@@ -1,3 +1,5 @@
+import dotenv
+dotenv.load_dotenv()
 from fastapi import FastAPI
 from src.router.api import router
 
