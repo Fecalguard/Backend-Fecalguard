@@ -6,9 +6,18 @@ from datetime import datetime
 import uuid
 from src.service.object_storage import storage_client, bucket_name
 from src.service.database import db
+import requests
 
-# Load model
-model = tf.keras.models.load_model("./model/model.h5")
+url = "https://storage.googleapis.com/fecal-guard/model/vgg16_model.h5"
+local_path = "vgg16_model.h5"
+
+# Unduh model dari cloud storage
+response = requests.get(url)
+with open(local_path, 'wb') as f:
+    f.write(response.content)
+
+# Load model dari file lokal
+model = tf.keras.models.load_model(local_path)
 
 # Daftar label
 CLASS_NAMES = ['Coccidiosis', 'Healthy', 'New Castle Disease', 'Salmonella']
