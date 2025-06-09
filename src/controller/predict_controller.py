@@ -7,8 +7,9 @@ import uuid
 from src.service.object_storage import storage_client, bucket_name
 from src.service.database import db
 import requests
+import os
 
-url = "https://storage.googleapis.com/fecal-guard/model/vgg16_model.h5"
+url = os.getenv("MODEL_URL")
 local_path = "vgg16_model.h5"
 
 # Unduh model dari cloud storage
